@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import sys
 import tkinter as tk
 
+# Setup user input dialogue window
 window = tk.Tk()
 window.title('eBay Scraper')
 window.geometry('400x200')
@@ -42,7 +43,7 @@ def parse_ebay():
     # Title storage
     titles = []
 
-    # Loop x number of pages
+    # Loop 10 pages
     for page_num in range(1, 11):
         link = 'https://www.ebay.com/sch/i.html?_from=R40&_nkw=vintage+t+shirt&_sacat=1059&rt=nc&LH_Sold=1&LH_Complete=1&_pgn='+str(page_num)
         response = get(link, headers=headers, timeout = 2)
