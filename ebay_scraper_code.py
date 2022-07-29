@@ -1,4 +1,3 @@
-import pandas as pd
 import openpyxl
 from requests import get
 from bs4 import BeautifulSoup
@@ -6,6 +5,8 @@ import sys
 import tkinter as tk
 
 window = tk.Tk()
+window.title('eBay Scraper')
+window.geometry('400x200')
 NEW_MONTH = False
 
 def handle_yes():
@@ -19,11 +20,13 @@ def handle_no():
     NEW_MONTH = False
     
 def ask_if_new_month():
+    l = tk.Label(window, text = "New month?")
+    l.config(font =("Courier", 14))
+    btn_yes = tk.Button(window, text="Yes", command = handle_yes, height = 3, width = 12)
+    btn_no = tk.Button(window, text="No", command = handle_no, height = 3, width = 12)
 
-    btn_yes = tk.Button(window, text="Yes", command = handle_yes)
-    btn_no = tk.Button(window, text="No", command = handle_no)
-
-    btn_yes.pack()
+    l.pack()
+    btn_yes.pack(pady=10)
     btn_no.pack()
 
     window.mainloop()
@@ -50,7 +53,6 @@ def parse_ebay():
         
         # Get the titles
             # Translate to account for emojis
-            # Substring to get rid of HTML
         for post in posts:
             titles.append(post.find('h3', class_='s-item__title').text.translate(non_bmp_map))
 
@@ -70,6 +72,17 @@ def parse_ebay():
             # If a word in the title is found in stopwords, remove it from the list
             if word.lower() in stopwords:
                 continue
+
+            # Important that items titled "M" are not separate from items titled "Medium"; it's the same size
+            # M = Medium, L = Large, XXL = 2XL
+            if word.lower() == "m":
+                word = "Medium"
+            elif word.lower() == "l":
+                word = "Large"
+            elif word.lower() == "xxl":
+                word = "2XL"
+            elif word.lowe() == "s":
+                word = "Small"
 
             # Add to dictionary, keep track of how many of the same words are found
             if word in title_data:
