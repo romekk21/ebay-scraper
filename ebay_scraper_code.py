@@ -49,7 +49,10 @@ def parse_ebay():
         # Get the titles
             # Translate to account for emojis
         for post in posts:
-            titles.append(post.find('h3', class_='s-item__title').text.translate(non_bmp_map))
+            title = post.find('span', class_='s-item__title')
+            if(title == None):
+                continue
+            titles.append(title.text.translate(non_bmp_map))
 
     return data_cleanup(titles)
 
@@ -161,7 +164,7 @@ else:
             my_sheet.cell(row = row_number, column = 3).value = count_of_words[i - start_row]
             row_number += 1
 
-    
+    # Update value of start row in Excel
     if NEW_MONTH:
         my_sheet.cell(row = 2, column = 6).value = total_rows
 
